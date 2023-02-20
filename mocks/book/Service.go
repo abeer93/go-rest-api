@@ -13,23 +13,23 @@ type Service struct {
 	mock.Mock
 }
 
-// AddNewBook provides a mock function with given fields: _a0
-func (_m *Service) AddNewBook(_a0 *book.Book) (book.Book, error) {
-	ret := _m.Called(_a0)
+// AddNewBook provides a mock function with given fields: bk
+func (_m *Service) AddNewBook(bk *book.Book) (book.Book, error) {
+	ret := _m.Called(bk)
 
 	var r0 book.Book
 	var r1 error
 	if rf, ok := ret.Get(0).(func(*book.Book) (book.Book, error)); ok {
-		return rf(_a0)
+		return rf(bk)
 	}
 	if rf, ok := ret.Get(0).(func(*book.Book) book.Book); ok {
-		r0 = rf(_a0)
+		r0 = rf(bk)
 	} else {
 		r0 = ret.Get(0).(book.Book)
 	}
 
 	if rf, ok := ret.Get(1).(func(*book.Book) error); ok {
-		r1 = rf(_a0)
+		r1 = rf(bk)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -63,13 +63,13 @@ func (_m *Service) GetAllBooks() ([]book.Book, error) {
 	return r0, r1
 }
 
-// RemoveBook provides a mock function with given fields: _a0
-func (_m *Service) RemoveBook(_a0 book.Book) error {
-	ret := _m.Called(_a0)
+// RemoveBook provides a mock function with given fields: ID
+func (_m *Service) RemoveBook(ID int64) error {
+	ret := _m.Called(ID)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(book.Book) error); ok {
-		r0 = rf(_a0)
+	if rf, ok := ret.Get(0).(func(int64) error); ok {
+		r0 = rf(ID)
 	} else {
 		r0 = ret.Error(0)
 	}

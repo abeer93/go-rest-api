@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"github.com/stretchr/testify/require"
 	// "github.com/stretchr/testify/mock"
+	"math/rand"
 	"encoding/json"
 	book "github.com/abeer93/go-rest-api/book/models"
 	"github.com/abeer93/go-rest-api/handler"
@@ -119,16 +120,15 @@ func TestListBooksWithoutDataExist(t *testing.T) {
 func TestCreateBook(t *testing.T) {
 	bsMock, bc := instantiateController(t)
 
-	var createdBook book.Book
-	book := book.Book{
+	bk := book.Book{
 		Author: "bery",
 		Title:  "software",
 	}
-	bsMock.On("AddNewBook", &book).Return(book, nil)
+	bsMock.On("AddNewBook", &bk).Return(bk, nil)
 
 	router := SetUpRouter()
 	router.POST("/books", bc.CreateBook)
-	requestBody, _ := json.Marshal(book)
+	requestBody, _ := json.Marshal(bk)
 	req, err := http.NewRequest("POST", "/books", bytes.NewBuffer(requestBody))
 	if err != nil {
 		fmt.Printf("create book request error >>> %v", err)
@@ -137,7 +137,29 @@ func TestCreateBook(t *testing.T) {
 	res := httptest.NewRecorder()
 	router.ServeHTTP(res, req)
 
+	var createdBook book.Book
 	assert.Equal(t, http.StatusCreated, res.Code)
 	json.Unmarshal(res.Body.Bytes(), &createdBook)
-	assert.Equal(t, book, createdBook)
+	assert.Equal(t, bk, createdBook)
+}
+
+func TestDeleteBook(t *testing.T) {
+	bsMock, bc := instantiateController(t)
+
+	randomNumber := rand.Intn(10)
+	id := int64(randomNumber)
+	bsMock.On("RemoveBook", id).Return(nil)
+
+	router := SetUpRouter()
+	router.DELETE("/books/:id", bc.DeleteBook)
+	url := fmt.Sprint("/books/", id)
+
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		fmt.Printf("remove book request error >>> %v", err)
+	}
+
+	res := httptest.NewRecorder()
+	router.ServeHTTP(res, req)
+	assert.Equal(t, http.StatusOK, res.Code)
 }

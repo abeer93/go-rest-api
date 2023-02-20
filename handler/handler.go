@@ -2,18 +2,11 @@ package handler
 
 import (
 	"github.com/abeer93/go-rest-api/book/models"
-	// "strconv"
 	"log"
 	"gorm.io/driver/postgres"
 	"fmt"
-	// "net/http"
-	// "github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
-
-// controller --> sevice interface, 
-// service -> repo interface
-// repo -> model interface
 
 // type Handler interface {
 // 	MigrateTable(modelName string)

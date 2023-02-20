@@ -50,10 +50,15 @@ func (bc *BookController) CreateBook(c *gin.Context) {
 }
 
 func (bc *BookController) DeleteBook(c *gin.Context) {
-	idInt, _ := strconv.ParseUint(c.Param("id"), 10, 32)
-	var book book.Book
-	book.ID = uint(idInt)
-	err := bc.service.RemoveBook(book)
+	idInt, err := strconv.ParseInt(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	err = bc.service.RemoveBook(idInt)
 	fmt.Println("response db ", err)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
